@@ -1,123 +1,71 @@
-import javax.servlet.*;
-import javax.servlet.http.*;
-import java.io.IOException;
-
-public class TantrazServlet extends HttpServlet {
-
-    @Override
-    protected void doGet(HttpServletRequest req, HttpServletResponse resp)
-            throws IOException {
-
-        resp.setContentType("text/html");
-
-        resp.getWriter().println("""
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-<meta charset="UTF-8">
-<title>Tantraz Registration</title>
+    <meta charset="UTF-8">
+    <title>Task 2 - Tantraz Registration</title>
 </head>
-
 <body>
 
-<h2>Tantraz Professional Registration</h2>
+<h2>Tantraz Event Registration</h2>
 
-<form method="post">
+<form aria-label="Tantraz Registration Form">
 
-<!-- Full Name -->
-<label>Full Name *</label><br>
-<input type="text"
-       name="fullname"
-       placeholder="Enter your full name"
-       aria-label="Full Name"
-       required>
-<br><br>
+    <!-- Full Name -->
+    <label for="fullname">Full Name</label>
+    <input type="text"
+           id="fullname"
+           name="fullname"
+           aria-label="Full name"
+           placeholder="Enter your full name">
 
-<!-- Email -->
-<label>Email *</label><br>
-<input type="email"
-       name="email"
-       placeholder="example@email.com"
-       aria-label="Email"
-       required>
-<br><br>
+    <!-- Email -->
+    <label for="email">Email</label>
+    <input type="email"
+           id="email"
+           name="email"
+           aria-label="Email address"
+           placeholder="example@email.com">
 
-<!-- Category -->
-<label>Participation Category *</label><br>
-<select name="category"
-        aria-label="Participation Category"
-        required>
-<option value="">Select category</option>
-<option>Individual</option>
-<option>Team</option>
-<option>Audience</option>
-</select>
-<br><br>
+    <!-- Participation Category -->
+    <label for="category">Participation Category</label>
+    <select id="category"
+            name="category"
+            aria-label="Participation category">
+        <option value="">Select category</option>
+        <option value="individual">Individual</option>
+        <option value="team">Team</option>
+        <option value="audience">Audience</option>
+    </select>
 
-<!-- T-Shirt Size -->
-<label>T-Shirt Size</label><br>
-<input type="radio" name="size" value="S"> S
-<input type="radio" name="size" value="M"> M
-<input type="radio" name="size" value="L"> L
-<input type="radio" name="size" value="XL"> XL
-<br><br>
+    <!-- T-Shirt Size -->
+    <label>T-Shirt Size</label><br>
+    <input type="radio" name="tshirt" value="S"> S
+    <input type="radio" name="tshirt" value="M"> M
+    <input type="radio" name="tshirt" value="L"> L
+    <input type="radio" name="tshirt" value="XL"> XL
 
-<!-- Technical Interests -->
-<label>Technical Interests</label><br>
-<input type="checkbox" name="interest" value="AI"> AI
-<input type="checkbox" name="interest" value="Web Dev"> Web Dev
-<input type="checkbox" name="interest" value="Cloud Computing"> Cloud Computing
-<br><br>
+    <br><br>
 
-<!-- Biography / Expectations -->
-<label>Expectations / Suggestions</label><br>
-<textarea name="expectations"
-          rows="4"
-          cols="40"
-          maxlength="200"
-          placeholder="Share your expectations (max 200 characters)">
-</textarea>
-<br><br>
+    <!-- Technical Interests -->
+    <label>Technical Interests</label><br>
+    <input type="checkbox" value="AI"> AI
+    <input type="checkbox" value="Web Development"> Web Development
+    <input type="checkbox" value="Cloud Computing"> Cloud Computing
 
-<button>Register</button>
+    <br><br>
+
+    <!-- Expectations -->
+    <label for="expectations">Expectations / Suggestions</label>
+    <textarea id="expectations"
+              name="expectations"
+              aria-label="Expectations or suggestions"
+              rows="4"
+              placeholder="Write your expectations"></textarea>
+
+    <br><br>
+    <button type="submit">Register</button>
 
 </form>
 
 </body>
 </html>
-""");
-    }
-
-    @Override
-    protected void doPost(HttpServletRequest req, HttpServletResponse resp)
-            throws IOException {
-
-        String fullname = req.getParameter("fullname");
-        String email = req.getParameter("email");
-        String category = req.getParameter("category");
-        String expectations = req.getParameter("expectations");
-
-        StringBuilder errors = new StringBuilder();
-
-        // Mandatory fields
-        if (fullname == null || fullname.isEmpty())
-            errors.append("Full name is required<br>");
-
-        if (email == null || !email.contains("@"))
-            errors.append("Valid email required<br>");
-
-        if (category == null || category.isEmpty())
-            errors.append("Category is required<br>");
-
-        // Character limit validation
-        if (expectations != null && expectations.length() > 200)
-            errors.append("Biography exceeds 200 characters<br>");
-
-        if (errors.length() > 0) {
-            resp.getWriter().println(errors.toString());
-            return;
-        }
-
-        resp.getWriter().println("<h3>Registration Successful!</h3>");
-    }
-}
