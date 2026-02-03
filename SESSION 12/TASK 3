@@ -1,0 +1,123 @@
+import javax.servlet.*;
+import javax.servlet.http.*;
+import java.io.IOException;
+
+public class TantrazServlet extends HttpServlet {
+
+    @Override
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp)
+            throws IOException {
+
+        resp.setContentType("text/html");
+
+        resp.getWriter().println("""
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Tantraz Registration</title>
+</head>
+
+<body>
+
+<h2>Tantraz Professional Registration</h2>
+
+<form method="post">
+
+<!-- Full Name -->
+<label>Full Name *</label><br>
+<input type="text"
+       name="fullname"
+       placeholder="Enter your full name"
+       aria-label="Full Name"
+       required>
+<br><br>
+
+<!-- Email -->
+<label>Email *</label><br>
+<input type="email"
+       name="email"
+       placeholder="example@email.com"
+       aria-label="Email"
+       required>
+<br><br>
+
+<!-- Category -->
+<label>Participation Category *</label><br>
+<select name="category"
+        aria-label="Participation Category"
+        required>
+<option value="">Select category</option>
+<option>Individual</option>
+<option>Team</option>
+<option>Audience</option>
+</select>
+<br><br>
+
+<!-- T-Shirt Size -->
+<label>T-Shirt Size</label><br>
+<input type="radio" name="size" value="S"> S
+<input type="radio" name="size" value="M"> M
+<input type="radio" name="size" value="L"> L
+<input type="radio" name="size" value="XL"> XL
+<br><br>
+
+<!-- Technical Interests -->
+<label>Technical Interests</label><br>
+<input type="checkbox" name="interest" value="AI"> AI
+<input type="checkbox" name="interest" value="Web Dev"> Web Dev
+<input type="checkbox" name="interest" value="Cloud Computing"> Cloud Computing
+<br><br>
+
+<!-- Biography / Expectations -->
+<label>Expectations / Suggestions</label><br>
+<textarea name="expectations"
+          rows="4"
+          cols="40"
+          maxlength="200"
+          placeholder="Share your expectations (max 200 characters)">
+</textarea>
+<br><br>
+
+<button>Register</button>
+
+</form>
+
+</body>
+</html>
+""");
+    }
+
+    @Override
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp)
+            throws IOException {
+
+        String fullname = req.getParameter("fullname");
+        String email = req.getParameter("email");
+        String category = req.getParameter("category");
+        String expectations = req.getParameter("expectations");
+
+        StringBuilder errors = new StringBuilder();
+
+        // Mandatory fields
+        if (fullname == null || fullname.isEmpty())
+            errors.append("Full name is required<br>");
+
+        if (email == null || !email.contains("@"))
+            errors.append("Valid email required<br>");
+
+        if (category == null || category.isEmpty())
+            errors.append("Category is required<br>");
+
+        // Character limit validation
+        if (expectations != null && expectations.length() > 200)
+            errors.append("Biography exceeds 200 characters<br>");
+
+        if (errors.length() > 0) {
+            resp.getWriter().println(errors.toString());
+            return;
+        }
+
+        resp.getWriter().println("<h3>Registration Successful!</h3>");
+    }
+}
