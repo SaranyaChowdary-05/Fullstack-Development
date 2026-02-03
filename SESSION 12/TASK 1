@@ -1,122 +1,64 @@
-import javax.servlet.*;
-import javax.servlet.http.*;
-import java.io.IOException;
-import java.util.regex.Pattern;
-
-public class AuthServlet extends HttpServlet {
-
-    private static final Pattern EMAIL =
-            Pattern.compile("^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$");
-
-    @Override
-    protected void doGet(HttpServletRequest req, HttpServletResponse resp)
-            throws IOException {
-
-        resp.setContentType("text/html");
-
-        resp.getWriter().println("""
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<title>Auth</title>
+    <meta charset="UTF-8">
+    <title>Task 1 - Sign In & Sign Up</title>
 </head>
 <body>
 
-<h2>Sign Up</h2>
+<h2>Sign In</h2>
+<form aria-label="Sign In Form">
 
-<form method="post">
+    <label for="signin-email">Email</label>
+    <input type="email"
+           id="signin-email"
+           name="email"
+           aria-label="Email address"
+           placeholder="Enter your email"
+           required>
 
-<input type="hidden" name="type" value="signup"/>
+    <label for="signin-password">Password</label>
+    <input type="password"
+           id="signin-password"
+           name="password"
+           aria-label="Password"
+           placeholder="Enter your password"
+           required>
 
-<label>Username</label><br>
-<input name="username" aria-label="Username" aria-required="true" required minlength="3"><br>
-
-<label>Email</label><br>
-<input name="email" type="email" aria-label="Email" aria-required="true" required><br>
-
-<label>Password</label><br>
-<input name="password" type="password" aria-label="Password" aria-required="true" required minlength="8"><br>
-
-<label>Confirm Password</label><br>
-<input name="confirm" type="password" aria-label="Confirm Password" aria-required="true" required><br>
-
-<button>Create Account</button>
-
+    <button type="submit">Sign In</button>
 </form>
 
 <hr>
 
-<h2>Sign In</h2>
+<h2>Sign Up</h2>
+<form aria-label="Sign Up Form">
 
-<form method="post">
+    <label for="signup-name">Full Name</label>
+    <input type="text"
+           id="signup-name"
+           name="fullname"
+           aria-label="Full name"
+           placeholder="Enter your full name"
+           required>
 
-<input type="hidden" name="type" value="signin"/>
+    <label for="signup-email">Email</label>
+    <input type="email"
+           id="signup-email"
+           name="email"
+           aria-label="Email address"
+           placeholder="Enter your email"
+           required>
 
-<label>Username or Email</label><br>
-<input name="identifier" aria-label="Username or Email" aria-required="true" required><br>
+    <label for="signup-password">Password</label>
+    <input type="password"
+           id="signup-password"
+           name="password"
+           aria-label="Create password"
+           placeholder="Create a password"
+           required>
 
-<label>Password</label><br>
-<input name="loginPassword" type="password" aria-label="Password" aria-required="true" required><br>
-
-<button>Sign In</button>
-
+    <button type="submit">Sign Up</button>
 </form>
 
 </body>
 </html>
-""");
-    }
-
-    @Override
-    protected void doPost(HttpServletRequest req, HttpServletResponse resp)
-            throws IOException {
-
-        String type = req.getParameter("type");
-        StringBuilder errors = new StringBuilder();
-
-        if ("signup".equals(type)) {
-
-            String username = req.getParameter("username");
-            String email = req.getParameter("email");
-            String password = req.getParameter("password");
-            String confirm = req.getParameter("confirm");
-
-            if (username == null || username.length() < 3)
-                errors.append("Username must be at least 3 chars<br>");
-
-            if (email == null || !EMAIL.matcher(email).matches())
-                errors.append("Invalid email<br>");
-
-            if (password == null || password.length() < 8)
-                errors.append("Password must be 8 chars<br>");
-
-            if (!password.equals(confirm))
-                errors.append("Passwords do not match<br>");
-
-            if (errors.length() == 0) {
-                resp.getWriter().println("Signup successful!");
-                return;
-            }
-        }
-
-        if ("signin".equals(type)) {
-
-            String id = req.getParameter("identifier");
-            String pass = req.getParameter("loginPassword");
-
-            if (id == null || id.isEmpty())
-                errors.append("Username/email required<br>");
-
-            if (pass == null || pass.isEmpty())
-                errors.append("Password required<br>");
-
-            if (errors.length() == 0) {
-                resp.getWriter().println("Signin successful!");
-                return;
-            }
-        }
-
-        resp.getWriter().println(errors.toString());
-    }
-}
